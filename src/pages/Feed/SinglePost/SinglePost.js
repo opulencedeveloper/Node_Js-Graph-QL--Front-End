@@ -14,11 +14,6 @@ class SinglePost extends Component {
 
   componentDidMount() {
     const postId = this.props.match.params.postId;
-    //title content imageUrl creator {  name } createdAt => are the field you want to get back as a Response
-    //if you want more or less fields, you can specify it here
-    //' FetchSinglePost' is just the name you gave this mutation, you can name it any name, to enable you pass data to the query from the variables below
-    //and the dataType has to match the data type in the schema file in the back end
-     //"!" means it us required
     const graphqlQuery = {
       query: `query FetchSinglePost($postId: ID!) {
         post(id: $postId) {
@@ -32,7 +27,6 @@ class SinglePost extends Component {
         }
       }
     `,
-    //here we extract the vaiable from our React app to this GraphQL query above, using 'variables:'
     variables: {
       postId: postId
     }
@@ -40,7 +34,6 @@ class SinglePost extends Component {
     fetch("http://localhost:8080/graphql/" + postId, {
       method: "POST",
       headers: {
-        //adding 'Bearer' is just a convention for token and is optional
         Authorization: "Bearer " + this.props.token,
         "Content-Type": "application/json",
       },

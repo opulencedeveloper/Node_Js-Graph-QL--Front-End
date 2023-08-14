@@ -22,8 +22,6 @@ class Feed extends Component {
   };
 
   componentDidMount() {
-    //here we are querying the user query, 'status' is the data we are getting back, you can
-    //specify more data here, but we only need 1
     const graphqlQuery = {
       query: `
           {
@@ -36,7 +34,6 @@ class Feed extends Component {
     fetch("http://localhost:8080/graphql", {
       method: "POST",
       headers: {
-        //adding 'Bearer' is just a convention for token and is optional
         Authorization: "Bearer " + this.props.token,
         "Content-Type": "application/json",
       },
@@ -70,12 +67,6 @@ class Feed extends Component {
       this.setState({ postPage: page });
     }
 
-    //these are the data we expect as a response that we need, if you need more  or less.
-    //you specify it,,
-    //page => wasnt wrapped in double quotation because its an integer variable
-    //' FetchPosts' is just the name you gave this mutation, you can name it any name, to enable you pass data to the query from the variables below
-    //and the dataType has to match the data type in the schema file in the back end
-     //"!" means it us required
     const graphqlQuery = {
       query: `
         query FetchPosts($currentPage: Int) {
@@ -93,7 +84,6 @@ class Feed extends Component {
           }
         }
       `,
-      //here we extract the vaiable from our React app to this GraphQL query above, using 'variables:'
       variables: {
         currentPage: page,
       },
@@ -101,7 +91,6 @@ class Feed extends Component {
     fetch("http://localhost:8080/graphql", {
       method: "POST",
       headers: {
-        //adding 'Bearer' is just a convention for token and is optional
         Authorization: "Bearer " + this.props.token,
         "Content-Type": "application/json",
       },
@@ -130,11 +119,6 @@ class Feed extends Component {
 
   statusUpdateHandler = (event) => {
     event.preventDefault();
-    //updateStatus(status: "${this.state.status}") => is what we are updating
-    //"status" is the data we expect back, we specify more data if we need
-    //' UpdateUserStatus' is just the name you gave this mutation, you can name it any name, to enable you pass data to the query from the variables below
-    //and the dataType has to match the data type in the schema file in the back end
-     //"!" means it us required
     const graphqlQuery = {
       query: `
         mutation UpdateUserStatus($userStatus: String!) {
@@ -143,7 +127,6 @@ class Feed extends Component {
           }
         }
       `,
-      //here we extract the vaiable from our React app to this GraphQL query above, using 'variables:'
       variables: {
         userStatus: this.state.status,
       },
@@ -151,7 +134,6 @@ class Feed extends Component {
     fetch("http://localhost:8080/graphql", {
       method: "POST",
       headers: {
-        //adding 'Bearer' is just a convention for token and is optional
         Authorization: "Bearer " + this.props.token,
         "Content-Type": "application/json",
       },
@@ -192,8 +174,6 @@ class Feed extends Component {
     this.setState({
       editLoading: true,
     });
-    //FormData() is used to send text and files
-    //here we are using it to send a file(image)
     const formData = new FormData();
     formData.append("image", postData.image);
     if (this.state.editPost) {
@@ -202,9 +182,7 @@ class Feed extends Component {
 
     fetch("http://localhost:8080/post-image", {
       method: "PUT",
-      //the headers for 'Content-Type'are set by default by FormData()
       headers: {
-        //adding 'Bearer' is just a convention for token and is optional
         Authorization: "Bearer " + this.props.token,
       },
       body: formData,
@@ -213,11 +191,6 @@ class Feed extends Component {
       .then((fileResData) => {
         const imageUrl = fileResData.filePath || 'undefined';;
 
-        //_id  title content imageUrl creator {  name } createdAt } is the data we are expecting back,
-        //this is the blue-print of the schema in the back-end
-        //'CreatNewPost' is just the name you gave this mutation, you can name it any name, to enable you pass data to the query from the variables below
-        //and the dataType has to match the data type in the schema file in the back end,
-        //"!" means it us required
         let graphqlQuery = {
           query: `
           mutation CreateNewPost($title: String!, $content: String!, $imageUrl: String!) {
@@ -233,7 +206,6 @@ class Feed extends Component {
             }
           }
         `,
-          //here we extract the vaiable from our React app to this GraphQL query above, using 'variables:'
           variables: {
             title: postData.title,
             content: postData.content,
@@ -241,9 +213,6 @@ class Feed extends Component {
           }
         };;
 
-        //'UpdateExistingPost' is just the name you gave this mutation, you can name it any name, to enable you pass data to the query from the variables below
-        //and the dataType has to match the data type in the schema file in the back end
-         //"!" means it us required
         if (this.state.editPost) {
           graphqlQuery = {
             query: `
@@ -260,7 +229,6 @@ class Feed extends Component {
                 }
               }
             `,
-            //here we extract the vaiable from our React app to this GraphQL query above, using 'variables:'
             variables: {
               postId: this.state.editPost._id,
               title: postData.title,
@@ -274,7 +242,6 @@ class Feed extends Component {
           method: "POST",
           body: JSON.stringify(graphqlQuery),
           headers: {
-            //adding 'Bearer' is just a convention for token and is optional
             Authorization: "Bearer " + this.props.token,
             "Content-Type": "application/json",
           },
@@ -313,9 +280,6 @@ class Feed extends Component {
             );
             updatedPosts[postIndex] = post;
           } else {
-            //this make sure that when you add post, it doesnt't show up as a 3rd item
-            //in the page, when we only want to have 2, though this will correct itself when you reload the page
-            updatedPosts.pop();
             updatedPosts.unshift(post);
           }
           return {
@@ -353,7 +317,6 @@ class Feed extends Component {
     fetch("http://localhost:8080/graphql", {
       method: "POST",
       headers: {
-        //adding 'Bearer' is just a convention for token and is optional
         Authorization: "Bearer " + this.props.token,
         "Content-Type": "application/json",
       },
@@ -367,10 +330,6 @@ class Feed extends Component {
           throw new Error("Deleting the post failed!");
         }
         this.loadPosts();
-        // this.setState((prevState) => {
-        //   const updatedPosts = prevState.posts.filter((p) => p._id !== postId);
-        //   return { posts: updatedPosts, postsLoading: false };
-        // });
       })
       .catch((err) => {
         console.log(err);

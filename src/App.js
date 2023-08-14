@@ -58,11 +58,6 @@ class App extends Component {
   loginHandler = (event, authData) => {
     event.preventDefault();
 
-    //token && userId are the data you are getting back
-    //this is the bluePrint of the schema in the back-end
-    //'UserLogin' is just the name you gave this mutation, you can name it any name, to enable you pass data to the query from the variables below
-    //and the dataType has to match the data type in the schema file in the back end
-    //"!" means it us required
     const graphqlQuery = {
       query: `
       query UserLogin($email: String!, $password: String!) {
@@ -72,7 +67,6 @@ class App extends Component {
         }
       }
     `,
-      //here we extract the vaiable from our React app to this GraphQL query above, using 'variables:'
       variables: {
         email: authData.email,
         password: authData.password,
@@ -127,12 +121,6 @@ class App extends Component {
   signupHandler = (event, authData) => {
     event.preventDefault();
     this.setState({ authLoading: true });
-    //this is blueprint of the schema in the back-end
-    //_id and email, is the data you are getting back, you can specify more or less fields here
-    //according to where you need them
-    //'CreateNewUser' is just the name you gave this mutation, you can name it any name, to enable you pass data to the query from the variables below
-    //and the dataType has to match the data type in the schema file in the back end
-    //"!" means it us required
     const graphqlQuery = {
       query: `
         mutation CreateNewUser($email: String!, $name: String!, $password: String!) {
@@ -142,7 +130,6 @@ class App extends Component {
           }
         }
       `,
-      //here we extract the vaiable from our React app to this GraphQL query above, using 'variables:'
       variables: {
         email: authData.signupForm.email.value,
         name: authData.signupForm.name.value,
